@@ -1,2 +1,2 @@
 #!/bin/bash
- cp -v -R .html /../
+cp -v -R *.html  /../
