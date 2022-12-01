@@ -1,2 +1,2 @@
-#!/bin/bash
- ls -a /n
+#!/bin/blsh
+ ls -l /n
