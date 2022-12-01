@@ -1,0 +1,2 @@
+echo #!/bin/bash
+chmod ugo=rwx hello
