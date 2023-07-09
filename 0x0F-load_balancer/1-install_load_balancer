@@ -9,3 +9,4 @@ options="\n\tbind :80\n\tmode http\n\tuse_backend mybackend\nbackend mybackend\n
 sed -i '/errorfile 504/a frontend myconf' /etc/haproxy/haproxy.cfg
 sed -i "s/frontend myconf/&$options/g" /etc/haproxy/haproxy.cfg
 sudo service haproxy restart
+
