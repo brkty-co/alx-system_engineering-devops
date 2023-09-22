@@ -1,37 +1,33 @@
 #!/usr/bin/python3
-"""
-Recursive function that queries the Reddit API and returns
-a list containing the titles of all hot articles for a given subreddit.
-If no results are found for the given subreddit,
-the function should return None.
-"""
-
+""" recursive function that queries the Reddit API """
 import requests
+import sys
+after = None
 
 
-def recurse(subreddit, hot_list=[], after=""):
-    """
-    Queries the Reddit API and returns
-    a list containing the titles of all hot articles for a given subreddit.
+def recurse(subreddit, hot_list=[]):
+    """     Args:
+        subreddit: subreddit name
+        hot_list: list of hot titles in subreddit
+        after: last hot_item appended to hot_list
+    Returns:
+        a list containing the titles of all hot articles for the subreddit
+        or None if queried subreddit is invalid """
+    global after
+    headers = {'User-Agent': 'xica369'}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    parameters = {'after': after}
+    response = requests.get(url, headers=headers, allow_redirects=False,
+                            params=parameters)
 
-    - If not a valid subreddit, return None.
-    """
-    req = requests.get(
-        "https://www.reddit.com/r/{}/hot.json".format(subreddit),
-        headers={"User-Agent": "Custom"},
-        params={"after": after},
-    )
-
-    if req.status_code == 200:
-        for get_data in req.json().get("data").get("children"):
-            dat = get_data.get("data")
-            title = dat.get("title")
-            hot_list.append(title)
-        after = req.json().get("data").get("after")
-
-        if after is None:
-            return hot_list
-        else:
-            return recurse(subreddit, hot_list, after)
+    if response.status_code == 200:
+        next_ = response.json().get('data').get('after')
+        if next_ is not None:
+            after = next_
+            recurse(subreddit, hot_list)
+        list_titles = response.json().get('data').get('children')
+        for title_ in list_titles:
+            hot_list.append(title_.get('data').get('title'))
+        return hot_list
     else:
-        return None
+        return (None)
